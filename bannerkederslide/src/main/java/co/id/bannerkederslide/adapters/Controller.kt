@@ -2,10 +2,10 @@ package co.id.bannerkederslide.adapters
 
 import android.util.Log
 
-class Controller constructor(slider: SliderAdapter,loop: Boolean) {
+class Controller constructor(slider: SliderInterface,loop: Boolean) {
     private val TAG = "PositionController"
-    private var recyclerViewAdapter: SliderRecyclerViewAdapter? = null
-    private val sliderAdapter: SliderAdapter = slider
+    private var recyclerViewAdapter: SliderAdapter? = null
+    private val sliderAdapter: SliderInterface = slider
     private var loop: Boolean = loop
 
 
@@ -27,7 +27,7 @@ class Controller constructor(slider: SliderAdapter,loop: Boolean) {
         if (!loop) {
             return position
         } else {
-            if (position >= 0 && position < sliderAdapter.itemCount) {
+            if (position >= 0 && position < sliderAdapter.getItemCount()) {
                 return position + 1
             } else {
                 Log.e(TAG, "setSelectedSlide: Invalid Item Position")
@@ -37,14 +37,14 @@ class Controller constructor(slider: SliderAdapter,loop: Boolean) {
     }
 
     fun getLastUserSlidePosition(): Int {
-        return sliderAdapter.itemCount - 1
+        return sliderAdapter.getItemCount() - 1
     }
 
     fun getFirstUserSlidePosition(): Int {
         return 0
     }
 
-    fun setRecyclerViewAdapter(recyclerViewAdapter: SliderRecyclerViewAdapter) {
+    fun setRecyclerViewAdapter(recyclerViewAdapter: SliderAdapter) {
         this.recyclerViewAdapter = recyclerViewAdapter
     }
 

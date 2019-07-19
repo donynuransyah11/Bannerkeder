@@ -11,5 +11,6 @@
         <attr name="slider_defaultBanner" format="integer" />
         <attr name="slider_emptyView" format="reference" />
         <attr name="slider_indicator_gravity" format="integer"/>
+        <attr name="slider_zoomable" format="boolean"/>
     </declare-styleable>
 </resources>

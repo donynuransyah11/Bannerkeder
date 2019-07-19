@@ -16,8 +16,12 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import co.id.bannerkederslide.adapters.Controller;
+import co.id.bannerkederslide.adapters.SliderAdapter;
+import co.id.bannerkederslide.adapters.SliderInterface;
 import co.id.bannerkederslide.event.OnSlideChangeListener;
 import co.id.bannerkederslide.event.OnSlideClickListener;
+import co.id.bannerkederslide.event.OnSlideZoomListener;
 import co.id.bannerkederslide.indicators.IndicatorShape;
 
 import java.util.Timer;
@@ -27,16 +31,17 @@ public class Slider extends FrameLayout {
     private static final String TAG = "Slider";
 
     public OnSlideChangeListener onSlideChangeListener;
+    public OnSlideZoomListener onSlideZoomListener;
     public OnSlideClickListener onSlideClickListener;
     public RecyclerView recyclerView;
-    public SliderRecyclerViewAdapter adapter;
+    public SliderAdapter adapter;
     public SlideIndicatorsGroup slideIndicatorsGroup;
     public int pendingPosition = RecyclerView.NO_POSITION;
     public SliderInterface sliderAdapter;
     public Config config;
     public int selectedSlidePosition = 0;
     public Timer timer;
-    public PositionController positionController;
+    public Controller positionController;
     public static ImageLoadingService imageLoadingService;
     private View emptyView;
 
@@ -67,6 +72,7 @@ public class Slider extends FrameLayout {
                         .loopSlides(typedArray.getBoolean(R.styleable.Slider_slider_loopSlides, false))
                         .gravityIndicators(typedArray.getInt(R.styleable.Slider_slider_indicator_gravity, 0)) // -1 left bottom | 0 center bottom | 1 right bottom
                         .slideChangeInterval(typedArray.getInteger(R.styleable.Slider_slider_interval, 0))
+                        .isZoomable(typedArray.getBoolean(R.styleable.Slider_slider_zoomable, false))
                         .selectedSlideIndicator(typedArray.getDrawable(R.styleable.Slider_slider_selectedSlideIndicator))
                         .unselectedSlideIndicator(typedArray.getDrawable(R.styleable.Slider_slider_unselectedSlideIndicator))
                         .hideIndicators(typedArray.getBoolean(R.styleable.Slider_slider_hideIndicators, false))
@@ -168,6 +174,12 @@ public class Slider extends FrameLayout {
             adapter.setOnSlideClickListener(onSlideClickListener);
     }
 
+    public void setOnSlideZoomClickListener(OnSlideZoomListener onSlideZoomListener) {
+        this.onSlideZoomListener = onSlideZoomListener;
+        if (adapter != null)
+            adapter.setOnSlideZoomListener(onSlideZoomListener);
+    }
+
     public SliderInterface getAdapter() {
         return this.sliderAdapter;
     }
@@ -188,8 +200,8 @@ public class Slider extends FrameLayout {
             recyclerView.setNestedScrollingEnabled(false);
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             recyclerView.setLayoutManager(linearLayoutManager);
-            positionController = new PositionController(sliderAdapter, config.loopSlides);
-            adapter = new SliderRecyclerViewAdapter(sliderAdapter, sliderAdapter.getItemCount() > 1 && config.loopSlides, recyclerView.getLayoutParams(), new OnTouchListener() {
+            positionController = new Controller(sliderAdapter, config.loopSlides);
+            adapter = new SliderAdapter(sliderAdapter, sliderAdapter.getItemCount() > 1 && config.loopSlides, config.zoomable, recyclerView.getLayoutParams(), new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {

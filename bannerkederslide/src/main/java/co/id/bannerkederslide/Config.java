@@ -10,6 +10,7 @@ public class Config {
     public static final int NOT_SELECTED = -1;
     protected boolean hideIndicators = false;
     protected int gravityIndicators = Gravity.BOTTOM | Gravity.CENTER;
+    protected boolean zoomable = false;
     protected boolean loopSlides = true;
     protected int indicatorSize = NOT_SELECTED;
     protected Drawable selectedSlideIndicator;
@@ -37,6 +38,11 @@ public class Config {
 
         public Builder gravityIndicators(int gravityIndicators) {
             config.gravityIndicators = gravityIndicators;
+            return this;
+        }
+
+        public Builder isZoomable(boolean zoomable) {
+            config.zoomable = zoomable;
             return this;
         }
 
