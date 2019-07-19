@@ -16,9 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import co.id.bannerkederslide.adapters.PositionController;
-import co.id.bannerkederslide.adapters.SliderAdapter;
-import co.id.bannerkederslide.adapters.SliderRecyclerViewAdapter;
 import co.id.bannerkederslide.event.OnSlideChangeListener;
 import co.id.bannerkederslide.event.OnSlideClickListener;
 import co.id.bannerkederslide.indicators.IndicatorShape;
@@ -35,7 +32,7 @@ public class Slider extends FrameLayout {
     public SliderRecyclerViewAdapter adapter;
     public SlideIndicatorsGroup slideIndicatorsGroup;
     public int pendingPosition = RecyclerView.NO_POSITION;
-    public SliderAdapter sliderAdapter;
+    public SliderInterface sliderAdapter;
     public Config config;
     public int selectedSlidePosition = 0;
     public Timer timer;
@@ -171,11 +168,11 @@ public class Slider extends FrameLayout {
             adapter.setOnSlideClickListener(onSlideClickListener);
     }
 
-    public SliderAdapter getAdapter() {
+    public SliderInterface getAdapter() {
         return this.sliderAdapter;
     }
 
-    public void setAdapter(SliderAdapter sliderAdapter) {
+    public void setAdapter(SliderInterface sliderAdapter) {
         if (sliderAdapter != null && recyclerView != null) {
             this.sliderAdapter = sliderAdapter;
             if (indexOfChild(recyclerView) == -1) {
