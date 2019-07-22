@@ -76,8 +76,8 @@ public class Slider extends FrameLayout {
                         .selectedSlideIndicator(typedArray.getDrawable(R.styleable.Slider_slider_selectedSlideIndicator))
                         .unselectedSlideIndicator(typedArray.getDrawable(R.styleable.Slider_slider_unselectedSlideIndicator))
                         .hideIndicators(typedArray.getBoolean(R.styleable.Slider_slider_hideIndicators, false))
-                        .selectedColor(typedArray.getInt(R.styleable.Slider_slider_selected_color, R.color.default_indicator_color_selected))
-                        .unselectedColor(typedArray.getInt(R.styleable.Slider_slider_unselected_color, R.color.default_indicator_color_unselected))
+                        .selectedColor(typedArray.getString(R.styleable.Slider_slider_selected_color))
+                        .unselectedColor(typedArray.getString(R.styleable.Slider_slider_unselected_color))
                         .build();
             } catch (Exception e) {
                 Log.e("Slider", "setupViews: ".toString());
