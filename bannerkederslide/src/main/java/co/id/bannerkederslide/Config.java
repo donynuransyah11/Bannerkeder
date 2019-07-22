@@ -1,8 +1,10 @@
 package co.id.bannerkederslide;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
+import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 
 
@@ -15,6 +17,8 @@ public class Config {
     protected int indicatorSize = NOT_SELECTED;
     protected Drawable selectedSlideIndicator;
     protected Drawable unselectedSlideIndicator;
+    protected int selectedColor;
+    protected int unselectedColor;
     protected boolean animateIndicators = true;
     protected int slideChangeInterval = 0;
     protected int emptyView = NOT_SELECTED;
@@ -78,6 +82,17 @@ public class Config {
 
         public Builder emptyView(int emptyView) {
             config.emptyView = emptyView;
+            return this;
+        }
+
+        public Builder selectedColor(int color){
+            config.selectedColor = color;
+            return this;
+        }
+
+
+        public Builder unselectedColor(int color){
+            config.unselectedColor = color;
             return this;
         }
 

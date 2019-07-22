@@ -76,6 +76,8 @@ public class Slider extends FrameLayout {
                         .selectedSlideIndicator(typedArray.getDrawable(R.styleable.Slider_slider_selectedSlideIndicator))
                         .unselectedSlideIndicator(typedArray.getDrawable(R.styleable.Slider_slider_unselectedSlideIndicator))
                         .hideIndicators(typedArray.getBoolean(R.styleable.Slider_slider_hideIndicators, false))
+                        .selectedColor(typedArray.getInt(R.styleable.Slider_slider_selected_color, R.color.default_indicator_color_selected))
+                        .unselectedColor(typedArray.getInt(R.styleable.Slider_slider_unselected_color, R.color.default_indicator_color_unselected))
                         .build();
             } catch (Exception e) {
                 Log.e("Slider", "setupViews: ".toString());
@@ -123,7 +125,9 @@ public class Slider extends FrameLayout {
                     0,
                     config.indicatorSize,
                     config.animateIndicators,
-                    config.gravityIndicators);
+                    config.gravityIndicators,
+                    config.selectedColor,
+                    config.unselectedColor);
         }
     }
 
@@ -356,7 +360,7 @@ public class Slider extends FrameLayout {
             if (slideIndicatorsGroup != null) {
                 removeView(slideIndicatorsGroup);
             }
-            slideIndicatorsGroup = new SlideIndicatorsGroup(getContext(), config.selectedSlideIndicator, config.unselectedSlideIndicator, 0, config.indicatorSize, config.animateIndicators, config.gravityIndicators);
+            slideIndicatorsGroup = new SlideIndicatorsGroup(getContext(), config.selectedSlideIndicator, config.unselectedSlideIndicator, 0, config.indicatorSize, config.animateIndicators, config.gravityIndicators, config.selectedColor, config.unselectedColor);
             addView(slideIndicatorsGroup);
             for (int i = 0; i < sliderAdapter.getItemCount(); i++) {
                 slideIndicatorsGroup.onSlideAdd();
