@@ -16,9 +16,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import co.id.bannerkederslide.adapters.Controller;
-import co.id.bannerkederslide.adapters.SliderAdapter;
-import co.id.bannerkederslide.adapters.SliderInterface;
+import co.id.bannerkederslide.adapters.RCSliderController;
+import co.id.bannerkederslide.adapters.RCSliderInterface;
+import co.id.bannerkederslide.adapters.RCSliderAdapter;
 import co.id.bannerkederslide.event.OnSlideChangeListener;
 import co.id.bannerkederslide.event.OnSlideClickListener;
 import co.id.bannerkederslide.event.OnSlideZoomListener;
@@ -34,14 +34,14 @@ public class Slider extends FrameLayout {
     public OnSlideZoomListener onSlideZoomListener;
     public OnSlideClickListener onSlideClickListener;
     public RecyclerView recyclerView;
-    public SliderAdapter adapter;
+    public RCSliderInterface adapter;
     public SlideIndicatorsGroup slideIndicatorsGroup;
     public int pendingPosition = RecyclerView.NO_POSITION;
-    public SliderInterface sliderAdapter;
+    public RCSliderAdapter sliderAdapter;
     public Config config;
     public int selectedSlidePosition = 0;
     public Timer timer;
-    public Controller positionController;
+    public RCSliderController positionRCSliderController;
     public static ImageLoadingService imageLoadingService;
     private View emptyView;
 
@@ -134,7 +134,7 @@ public class Slider extends FrameLayout {
     public void onImageSlideChange(int position) {
         Log.d(TAG, "onImageSlideChange() called with: position = [" + position + "]");
         selectedSlidePosition = position;
-        int userSlidePosition = positionController.getUserSlidePosition(position);
+        int userSlidePosition = positionRCSliderController.getUserSlidePosition(position);
         if (slideIndicatorsGroup != null)
             slideIndicatorsGroup.onSlideChange(userSlidePosition);
         if (onSlideChangeListener != null) {
@@ -156,7 +156,7 @@ public class Slider extends FrameLayout {
     }
 
     public void setSelectedSlide(int position) {
-        setSelectedSlide(positionController.getRealSlidePosition(position), true);
+        setSelectedSlide(positionRCSliderController.getRealSlidePosition(position), true);
     }
 
     private void onAdapterAttached() {
@@ -184,11 +184,11 @@ public class Slider extends FrameLayout {
             adapter.setOnSlideZoomListener(onSlideZoomListener);
     }
 
-    public SliderInterface getAdapter() {
+    public RCSliderAdapter getAdapter() {
         return this.sliderAdapter;
     }
 
-    public void setAdapter(SliderInterface sliderAdapter) {
+    public void setAdapter(RCSliderAdapter sliderAdapter) {
         if (sliderAdapter != null && recyclerView != null) {
             this.sliderAdapter = sliderAdapter;
             if (indexOfChild(recyclerView) == -1) {
@@ -204,8 +204,8 @@ public class Slider extends FrameLayout {
             recyclerView.setNestedScrollingEnabled(false);
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             recyclerView.setLayoutManager(linearLayoutManager);
-            positionController = new Controller(sliderAdapter, config.loopSlides);
-            adapter = new SliderAdapter(sliderAdapter, sliderAdapter.getItemCount() > 1 && config.loopSlides, config.zoomable, recyclerView.getLayoutParams(), new OnTouchListener() {
+            positionRCSliderController = new RCSliderController(sliderAdapter, config.loopSlides);
+            adapter = new RCSliderInterface(sliderAdapter, sliderAdapter.getItemCount() > 1 && config.loopSlides, config.zoomable, recyclerView.getLayoutParams(), new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -215,10 +215,10 @@ public class Slider extends FrameLayout {
                     }
                     return false;
                 }
-            }, positionController);
+            }, positionRCSliderController);
 
             recyclerView.setAdapter(adapter);
-            positionController.setRecyclerViewAdapter(adapter);
+            positionRCSliderController.setRecyclerViewAdapter(adapter);
 
             //Show default selected slide
             selectedSlidePosition = config.loopSlides ? 1 : 0;
@@ -297,7 +297,7 @@ public class Slider extends FrameLayout {
                 ((Activity) getContext()).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int nextSlidePosition = positionController.getNextSlide(selectedSlidePosition);
+                        int nextSlidePosition = positionRCSliderController.getNextSlide(selectedSlidePosition);
                         recyclerView.smoothScrollToPosition(nextSlidePosition);
                         onImageSlideChange(nextSlidePosition);
 
@@ -316,7 +316,7 @@ public class Slider extends FrameLayout {
     public void setLoopSlides(boolean loopSlides) {
         config.loopSlides = loopSlides;
         adapter.setLoop(loopSlides);
-        positionController.setLoop(loopSlides);
+        positionRCSliderController.setLoop(loopSlides);
         adapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(loopSlides ? 1 : 0);
         onImageSlideChange(loopSlides ? 1 : 0);

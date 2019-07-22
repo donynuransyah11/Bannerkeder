@@ -3,25 +3,24 @@ package co.id.bannerkederslide.adapters
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ZoomButtonsController
 import androidx.recyclerview.widget.RecyclerView
 import co.id.bannerkederslide.SlideType
 import co.id.bannerkederslide.event.OnSlideClickListener
 import co.id.bannerkederslide.event.OnSlideZoomListener
 import co.id.bannerkederslide.viewholder.ImageSlideViewHolder
 
-class SliderAdapter constructor(
-    iSliderAdapter: SliderInterface,
+class RCSliderInterface constructor(
+    iSliderAdapter: RCSliderAdapter,
     private var loop: Boolean,
     private var zoom: Boolean,
     private val imageViewLayoutParams: ViewGroup.LayoutParams,
     private val itemOnTouchListener: View.OnTouchListener,
-    private val positionController: Controller
+    private val positionController: RCSliderController
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var onSlideClickListener: OnSlideClickListener? = null
     private var onZoomListener: OnSlideZoomListener? = null
-    private val sliderAdapter: SliderInterface = iSliderAdapter
+    private val sliderAdapter: RCSliderAdapter = iSliderAdapter
 
 
     fun setOnSlideClickListener(onSlideClickListener: OnSlideClickListener) {
