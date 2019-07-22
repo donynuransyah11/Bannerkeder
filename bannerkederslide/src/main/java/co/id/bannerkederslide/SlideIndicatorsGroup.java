@@ -1,6 +1,7 @@
 package co.id.bannerkederslide;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -24,15 +26,17 @@ class SlideIndicatorsGroup extends LinearLayout implements OnSlideChangeListener
     private int slidesCount;
     private Drawable selectedSlideIndicator;
     private Drawable unselectedSlideIndicator;
-    private int unselectedColor;
-    private int selectedColor;
+    @ColorInt
+    private int unselectedColor = Color.parseColor("#FFFFFF");
+    @ColorInt
+    private int selectedColor = Color.parseColor("#000000");
     private int defaultIndicator;
     private int indicatorSize;
     private boolean mustAnimateIndicators = true;
     private int gravityIndicator;
     private List<IndicatorShape> indicatorShapes = new ArrayList<>();
 
-    public SlideIndicatorsGroup(Context context, Drawable selectedSlideIndicator, Drawable unselectedSlideIndicator, int defaultIndicator, int indicatorSize, boolean mustAnimateIndicators, int gravityIndicator, int selectedColor, int unselectedColor) {
+    public SlideIndicatorsGroup(Context context, Drawable selectedSlideIndicator, Drawable unselectedSlideIndicator, int defaultIndicator, int indicatorSize, boolean mustAnimateIndicators, int gravityIndicator, String selectedColor, String unselectedColor) {
         super(context);
         this.context = context;
         this.selectedSlideIndicator = selectedSlideIndicator;
@@ -41,8 +45,12 @@ class SlideIndicatorsGroup extends LinearLayout implements OnSlideChangeListener
         this.indicatorSize = indicatorSize;
         this.gravityIndicator = gravityIndicator;
         this.mustAnimateIndicators = mustAnimateIndicators;
-        this.selectedColor = ContextCompat.getColor(context, selectedColor);
-        this.unselectedColor = ContextCompat.getColor(context, unselectedColor);
+        if (selectedColor != null) {
+            this.selectedColor = Color.parseColor(selectedColor);
+        }
+        if (unselectedColor != null) {
+            this.unselectedColor = Color.parseColor(unselectedColor);
+        }
         setup();
     }
 

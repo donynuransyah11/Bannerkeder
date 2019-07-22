@@ -17,8 +17,8 @@ public class Config {
     protected int indicatorSize = NOT_SELECTED;
     protected Drawable selectedSlideIndicator;
     protected Drawable unselectedSlideIndicator;
-    protected int selectedColor;
-    protected int unselectedColor;
+    protected String selectedColor;
+    protected String unselectedColor;
     protected boolean animateIndicators = true;
     protected int slideChangeInterval = 0;
     protected int emptyView = NOT_SELECTED;
@@ -85,13 +85,13 @@ public class Config {
             return this;
         }
 
-        public Builder selectedColor(int color){
+        public Builder selectedColor(String color){
             config.selectedColor = color;
             return this;
         }
 
 
-        public Builder unselectedColor(int color){
+        public Builder unselectedColor(String color){
             config.unselectedColor = color;
             return this;
         }
