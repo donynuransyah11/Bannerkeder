@@ -3,7 +3,7 @@ package co.id.bannerkederslide.adapters
 import co.id.bannerkederslide.SlideType
 import co.id.bannerkederslide.viewholder.ImageSlideViewHolder
 
-abstract class SliderInterface {
+abstract class RCSliderAdapter {
     abstract fun getItemCount(): Int
 
     fun getSlideType(position: Int): SlideType {

@@ -2,10 +2,10 @@ package co.id.bannerkederslide.adapters
 
 import android.util.Log
 
-class Controller constructor(slider: SliderInterface,loop: Boolean) {
+class RCSliderController constructor(slider: RCSliderAdapter, loop: Boolean) {
     private val TAG = "PositionController"
-    private var recyclerViewAdapter: SliderAdapter? = null
-    private val sliderAdapter: SliderInterface = slider
+    private var recyclerViewAdapter: RCSliderInterface? = null
+    private val sliderAdapter: RCSliderAdapter = slider
     private var loop: Boolean = loop
 
 
@@ -44,7 +44,7 @@ class Controller constructor(slider: SliderInterface,loop: Boolean) {
         return 0
     }
 
-    fun setRecyclerViewAdapter(recyclerViewAdapter: SliderAdapter) {
+    fun setRecyclerViewAdapter(recyclerViewAdapter: RCSliderInterface) {
         this.recyclerViewAdapter = recyclerViewAdapter
     }
 
