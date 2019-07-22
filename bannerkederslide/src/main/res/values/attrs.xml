@@ -7,9 +7,13 @@
         <attr name="slider_unselectedSlideIndicator" format="reference" />
         <attr name="slider_animateIndicators" format="boolean" />
         <attr name="slider_interval" format="integer" />
+        <attr name="slider_selected_color" format="integer"/>
+        <attr name="slider_unselected_color" format="integer"/>
         <attr name="slider_loopSlides" format="boolean" />
         <attr name="slider_defaultBanner" format="integer" />
         <attr name="slider_emptyView" format="reference" />
         <attr name="slider_indicator_gravity" format="integer"/>
+        <attr name="slider_zoomable" format="boolean"/>
+
     </declare-styleable>
 </resources>

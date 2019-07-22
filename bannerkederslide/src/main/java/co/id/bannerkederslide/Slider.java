@@ -16,11 +16,12 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import co.id.bannerkederslide.adapters.PositionController;
+import co.id.bannerkederslide.adapters.Controller;
 import co.id.bannerkederslide.adapters.SliderAdapter;
-import co.id.bannerkederslide.adapters.SliderRecyclerViewAdapter;
+import co.id.bannerkederslide.adapters.SliderInterface;
 import co.id.bannerkederslide.event.OnSlideChangeListener;
 import co.id.bannerkederslide.event.OnSlideClickListener;
+import co.id.bannerkederslide.event.OnSlideZoomListener;
 import co.id.bannerkederslide.indicators.IndicatorShape;
 
 import java.util.Timer;
@@ -30,16 +31,17 @@ public class Slider extends FrameLayout {
     private static final String TAG = "Slider";
 
     public OnSlideChangeListener onSlideChangeListener;
+    public OnSlideZoomListener onSlideZoomListener;
     public OnSlideClickListener onSlideClickListener;
     public RecyclerView recyclerView;
-    public SliderRecyclerViewAdapter adapter;
+    public SliderAdapter adapter;
     public SlideIndicatorsGroup slideIndicatorsGroup;
     public int pendingPosition = RecyclerView.NO_POSITION;
-    public SliderAdapter sliderAdapter;
+    public SliderInterface sliderAdapter;
     public Config config;
     public int selectedSlidePosition = 0;
     public Timer timer;
-    public PositionController positionController;
+    public Controller positionController;
     public static ImageLoadingService imageLoadingService;
     private View emptyView;
 
@@ -70,9 +72,12 @@ public class Slider extends FrameLayout {
                         .loopSlides(typedArray.getBoolean(R.styleable.Slider_slider_loopSlides, false))
                         .gravityIndicators(typedArray.getInt(R.styleable.Slider_slider_indicator_gravity, 0)) // -1 left bottom | 0 center bottom | 1 right bottom
                         .slideChangeInterval(typedArray.getInteger(R.styleable.Slider_slider_interval, 0))
+                        .isZoomable(typedArray.getBoolean(R.styleable.Slider_slider_zoomable, false))
                         .selectedSlideIndicator(typedArray.getDrawable(R.styleable.Slider_slider_selectedSlideIndicator))
                         .unselectedSlideIndicator(typedArray.getDrawable(R.styleable.Slider_slider_unselectedSlideIndicator))
                         .hideIndicators(typedArray.getBoolean(R.styleable.Slider_slider_hideIndicators, false))
+                        .selectedColor(typedArray.getInt(R.styleable.Slider_slider_selected_color, R.color.default_indicator_color_selected))
+                        .unselectedColor(typedArray.getInt(R.styleable.Slider_slider_unselected_color, R.color.default_indicator_color_unselected))
                         .build();
             } catch (Exception e) {
                 Log.e("Slider", "setupViews: ".toString());
@@ -120,7 +125,9 @@ public class Slider extends FrameLayout {
                     0,
                     config.indicatorSize,
                     config.animateIndicators,
-                    config.gravityIndicators);
+                    config.gravityIndicators,
+                    config.selectedColor,
+                    config.unselectedColor);
         }
     }
 
@@ -171,11 +178,17 @@ public class Slider extends FrameLayout {
             adapter.setOnSlideClickListener(onSlideClickListener);
     }
 
-    public SliderAdapter getAdapter() {
+    public void setOnSlideZoomClickListener(OnSlideZoomListener onSlideZoomListener) {
+        this.onSlideZoomListener = onSlideZoomListener;
+        if (adapter != null)
+            adapter.setOnSlideZoomListener(onSlideZoomListener);
+    }
+
+    public SliderInterface getAdapter() {
         return this.sliderAdapter;
     }
 
-    public void setAdapter(SliderAdapter sliderAdapter) {
+    public void setAdapter(SliderInterface sliderAdapter) {
         if (sliderAdapter != null && recyclerView != null) {
             this.sliderAdapter = sliderAdapter;
             if (indexOfChild(recyclerView) == -1) {
@@ -191,8 +204,8 @@ public class Slider extends FrameLayout {
             recyclerView.setNestedScrollingEnabled(false);
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             recyclerView.setLayoutManager(linearLayoutManager);
-            positionController = new PositionController(sliderAdapter, config.loopSlides);
-            adapter = new SliderRecyclerViewAdapter(sliderAdapter, sliderAdapter.getItemCount() > 1 && config.loopSlides, recyclerView.getLayoutParams(), new OnTouchListener() {
+            positionController = new Controller(sliderAdapter, config.loopSlides);
+            adapter = new SliderAdapter(sliderAdapter, sliderAdapter.getItemCount() > 1 && config.loopSlides, config.zoomable, recyclerView.getLayoutParams(), new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -347,7 +360,7 @@ public class Slider extends FrameLayout {
             if (slideIndicatorsGroup != null) {
                 removeView(slideIndicatorsGroup);
             }
-            slideIndicatorsGroup = new SlideIndicatorsGroup(getContext(), config.selectedSlideIndicator, config.unselectedSlideIndicator, 0, config.indicatorSize, config.animateIndicators, config.gravityIndicators);
+            slideIndicatorsGroup = new SlideIndicatorsGroup(getContext(), config.selectedSlideIndicator, config.unselectedSlideIndicator, 0, config.indicatorSize, config.animateIndicators, config.gravityIndicators, config.selectedColor, config.unselectedColor);
             addView(slideIndicatorsGroup);
             for (int i = 0; i < sliderAdapter.getItemCount(); i++) {
                 slideIndicatorsGroup.onSlideAdd();

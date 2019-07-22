@@ -8,6 +8,10 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import androidx.annotation.ColorRes;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import co.id.bannerkederslide.event.OnSlideChangeListener;
 import co.id.bannerkederslide.indicators.*;
 
@@ -20,13 +24,15 @@ class SlideIndicatorsGroup extends LinearLayout implements OnSlideChangeListener
     private int slidesCount;
     private Drawable selectedSlideIndicator;
     private Drawable unselectedSlideIndicator;
+    private int unselectedColor;
+    private int selectedColor;
     private int defaultIndicator;
     private int indicatorSize;
     private boolean mustAnimateIndicators = true;
     private int gravityIndicator;
     private List<IndicatorShape> indicatorShapes = new ArrayList<>();
 
-    public SlideIndicatorsGroup(Context context, Drawable selectedSlideIndicator, Drawable unselectedSlideIndicator, int defaultIndicator, int indicatorSize, boolean mustAnimateIndicators, int gravityIndicator) {
+    public SlideIndicatorsGroup(Context context, Drawable selectedSlideIndicator, Drawable unselectedSlideIndicator, int defaultIndicator, int indicatorSize, boolean mustAnimateIndicators, int gravityIndicator, int selectedColor, int unselectedColor) {
         super(context);
         this.context = context;
         this.selectedSlideIndicator = selectedSlideIndicator;
@@ -35,6 +41,8 @@ class SlideIndicatorsGroup extends LinearLayout implements OnSlideChangeListener
         this.indicatorSize = indicatorSize;
         this.gravityIndicator = gravityIndicator;
         this.mustAnimateIndicators = mustAnimateIndicators;
+        this.selectedColor = ContextCompat.getColor(context, selectedColor);
+        this.unselectedColor = ContextCompat.getColor(context, unselectedColor);
         setup();
     }
 
@@ -61,12 +69,23 @@ class SlideIndicatorsGroup extends LinearLayout implements OnSlideChangeListener
                 public void onCheckedChange(boolean isChecked) {
                     super.onCheckedChange(isChecked);
                     if (isChecked) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            selectedSlideIndicator.setTint(selectedColor);
+                        } else {
+                            DrawableCompat.setTint(selectedSlideIndicator, selectedColor);
+                        }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             setBackground(selectedSlideIndicator);
                         } else {
                             setBackgroundDrawable(selectedSlideIndicator);
                         }
+
                     } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            selectedSlideIndicator.setTint(unselectedColor);
+                        } else {
+                            DrawableCompat.setTint(selectedSlideIndicator, unselectedColor);
+                        }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             setBackground(unselectedSlideIndicator);
                         } else {
@@ -75,6 +94,12 @@ class SlideIndicatorsGroup extends LinearLayout implements OnSlideChangeListener
                     }
                 }
             };
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                selectedSlideIndicator.setTint(unselectedColor);
+            } else {
+                DrawableCompat.setTint(selectedSlideIndicator, unselectedColor);
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 indicatorShape.setBackground(unselectedSlideIndicator);
             } else {
