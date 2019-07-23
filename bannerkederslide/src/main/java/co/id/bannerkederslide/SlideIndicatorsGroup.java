@@ -82,37 +82,24 @@ class SlideIndicatorsGroup extends LinearLayout implements OnSlideChangeListener
                         } else {
                             DrawableCompat.setTint(selectedSlideIndicator, selectedColor);
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            setBackground(selectedSlideIndicator);
-                        } else {
-                            setBackgroundDrawable(selectedSlideIndicator);
-                        }
-
+                        setBackground(selectedSlideIndicator);
                     } else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             selectedSlideIndicator.setTint(unselectedColor);
                         } else {
                             DrawableCompat.setTint(selectedSlideIndicator, unselectedColor);
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            setBackground(unselectedSlideIndicator);
-                        } else {
-                            setBackgroundDrawable(unselectedSlideIndicator);
-                        }
+                        setBackground(unselectedSlideIndicator);
                     }
                 }
             };
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                selectedSlideIndicator.setTint(unselectedColor);
+                unselectedSlideIndicator.setTint(unselectedColor);
             } else {
-                DrawableCompat.setTint(selectedSlideIndicator, unselectedColor);
+                DrawableCompat.setTint(unselectedSlideIndicator, unselectedColor);
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                indicatorShape.setBackground(unselectedSlideIndicator);
-            } else {
-                indicatorShape.setBackgroundDrawable(unselectedSlideIndicator);
-            }
+            indicatorShape.setBackground(unselectedSlideIndicator);
             indicatorShapes.add(indicatorShape);
             addView(indicatorShape);
 
